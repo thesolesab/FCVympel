@@ -1,0 +1,11 @@
+.posts {
+    width: 50%;
+    margin: 0 auto;
+    overflow: auto;
+    margin-top: 1rem;
+
+    &__spiner {
+        height: 100vh;
+        position: relative;
+    }
+}

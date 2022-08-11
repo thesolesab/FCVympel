@@ -1,0 +1,28 @@
+.card {
+    background-color: grayscale($color: #fff);
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    // width: 500px;
+    padding: 12px;
+    margin: 8px 0;
+    font-size: 22px;
+
+    .title {
+        font-weight: bolder;
+    }
+
+    .author {
+        font-weight: lighter;
+    }
+
+    &__footer {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    button {
+        font-size: 20px;
+        padding: 0 5px;
+    }
+}

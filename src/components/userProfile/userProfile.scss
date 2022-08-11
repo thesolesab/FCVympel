@@ -1,0 +1,33 @@
+.profile {
+    margin-top: 3rem;
+
+    &__card {
+        display: flex;
+        border: 1px solid;
+        background-color: rgba($color: aliceblue, $alpha: .4);
+        font-size: 22px;
+        padding: 2rem;
+        align-items: center;
+        justify-content: center;
+
+        p {
+            display: flex;
+            justify-content: space-between;
+
+            input {
+                font-size: 22px;
+                background-color: inherit;
+                border: none;
+                margin-left: 1rem;
+            }
+        }
+    }
+
+    &__data {
+        margin-right: 2rem;
+    }
+
+    &__image {
+        max-width: 100px;
+    }
+}

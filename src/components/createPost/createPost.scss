@@ -1,0 +1,24 @@
+.addForm {
+    display: flex;
+    flex-direction: column;
+    // width: 500px;
+
+    input {
+        margin: 5px 0;
+        font-size: 22px;
+    }
+
+    textarea {
+        font-size: 22px;
+        margin-bottom: 5px;
+        resize: none;
+    }
+
+    button {
+        font-size: 22px;
+    }
+
+    #descr {
+        height: 160px;
+    }
+}
