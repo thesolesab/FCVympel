@@ -43,7 +43,67 @@ export const useHttp = () => {
         return text
     }
 
+    const gameSchedule = (teams) => {
+        const teamsList = teams?.filter(team => team.name !== 'unsorted')
 
-    return { handleLogout, timeToGame }
+        const numOfTeams = Object.keys(teamsList).length
+        const gameDayDuration = 90
+        const numOfGamesInLap = (numOfTeams * (numOfTeams - 1) / 2)
+        const numOfLaps = Math.round(gameDayDuration / (numOfGamesInLap * 10))
+        const gameDuration = gameDayDuration / (numOfLaps * numOfGamesInLap)
+
+        const result = {
+            results: {}
+        }
+
+        function createGame(a, b) {
+            const game = {
+                [a.name]: 0,
+                [b.name]: 0
+            }
+            return game
+        }
+
+        function createSchedule() {
+            const lapNum = [
+                [0, 1],
+                [1, 2],
+                [2, 3],
+                [3, 0],
+                [0, 2],
+                [1, 3]
+            ]
+
+            const lap = {}
+            for (let i = 0; i < lapNum.length; i++) {
+                if (lapNum[i][0] < teamsList.length && lapNum[i][1] < teamsList.length) {
+                    const a = createGame(teamsList[lapNum[i][0]], teamsList[lapNum[i][1]])
+                    lap[i] = { ...a }
+                }
+            }
+
+            for (let i = 0; i < numOfLaps; i++) {
+                result.results[i] = lap
+            }
+
+            return result
+        }
+
+
+        if (Object.keys(teamsList).length > 2) {
+            const schedule = createSchedule()
+
+            return [schedule, gameDuration]
+        } else {
+            result.results = [createGame(teamsList[0], teamsList[1])]
+
+            const schedule = result
+
+            return [schedule, gameDuration]
+        }
+    }
+
+
+    return { handleLogout, timeToGame, gameSchedule }
 }
 

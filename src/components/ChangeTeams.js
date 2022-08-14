@@ -1,10 +1,10 @@
-import { Divider, IconButton, Paper, Stack, Typography } from '@mui/material'
+import { Collapse, Divider, IconButton, Paper, Stack, Typography } from '@mui/material'
 import { deletePlayer, deleteTeam, useFetchData } from 'firebase1'
 import ClearIcon from '@mui/icons-material/Clear';
 import AddPlayerInTeam from './AddPlayerInTeam';
 import { blueGrey } from '@mui/material/colors';
 import { Fragment } from 'react';
-
+import { TransitionGroup } from 'react-transition-group';
 
 function ChangeTeams() {
     const [teams, loadingTeams] = useFetchData('games/teams/children')
@@ -64,21 +64,23 @@ function ChangeTeams() {
                             }
                         </Stack>
                         <Divider />
-                        {players?.filter(el => el.team === team.name).map(player => (
-                            <Fragment key={player.id}>
-                                <Stack
-                                    direction='row'
-                                    justifyContent='space-between'
-                                    alignItems='center'
-                                >
-                                    <Typography >{player.name} {player.legioner && '(легионер)'}</Typography>
-                                    <IconButton color="error" onClick={() => handleDeletePlayer(player.name)}>
-                                        <ClearIcon fontSize="small" />
-                                    </IconButton>
-                                </Stack>
-                                <Divider />
-                            </Fragment>
-                        ))}
+                        <TransitionGroup>
+                            {players?.filter(el => el.team === team.name).map(player => (
+                                <Collapse key={player.id}>
+                                    <Stack
+                                        direction='row'
+                                        justifyContent='space-between'
+                                        alignItems='center'
+                                    >
+                                        <Typography >{player.name} {player.legioner && '(легионер)'}</Typography>
+                                        <IconButton color="error" onClick={() => handleDeletePlayer(player.name)}>
+                                            <ClearIcon fontSize="small" />
+                                        </IconButton>
+                                    </Stack>
+                                    <Divider />
+                                </Collapse>
+                            ))}
+                        </TransitionGroup>
                         {team.name !== 'unsorted' &&
                             <>
                                 {!loadingTeams && !loadingPlayers && <AddPlayerInTeam players={players} team={team.name} />}

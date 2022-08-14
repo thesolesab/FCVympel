@@ -209,6 +209,10 @@ export function updatePlayer([name, newTeam, oldTeam]) {
 }
 
 export async function updateUser(currentUser, games, { goals }) {
+    if (currentUser.legioner) {
+        return
+    }
+
     const userRef = doc(db, "users", currentUser.id)
 
     if (goals) {
@@ -259,16 +263,24 @@ export async function deleteTeam(name) {
     return deleteDoc(teamRef)
 }
 
-export async function lastGame() {
-    const lastGameRef = doc(db, `games/gameDays/children/lastGame`)
-    const lastGameName = await getDoc(lastGameRef)
+export async function updateResults({ lap, num, ...res }) {
+    const lastGameNameRef = doc(db, `games/gameDays/children/lastGame`)
+    const lastGameName = await getDoc(lastGameNameRef)
         .then(doc => doc.data())
-    const lastGamePlayersRef = doc(db, `games/gameDays/children/${lastGameName.name}`)
-    const game = await getDoc(lastGamePlayersRef)
-        .then(doc => doc.data())
+    const lastGameRef = doc(db, `games/gameDays/children/${lastGameName.name}`)
 
-    return game
+    let path = `results.${lap}`
+
+    if (num < 1000) {
+        path = `results.${--lap}.${num}`
+    }
+
+    updateDoc(lastGameRef, {
+        [path]: { ...res }
+    })
 }
+
+
 
 export async function questionedPlayer(idx) {
     const lastGameNameRef = doc(db, `games/gameDays/children/lastGame`)
@@ -285,6 +297,27 @@ export async function questionedPlayer(idx) {
 }
 
 //Custom Hook DB
+
+export function useLastGame() {
+    const [game, setGame] = useState()
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        const getRef = async () => {
+            const lastGameRef = doc(db, `games/gameDays/children/lastGame`)
+            const lastGameName = await getDoc(lastGameRef)
+                .then(doc => doc.data())
+            const lastGamePlayersRef = doc(db, `games/gameDays/children/${lastGameName.name}`)
+            onSnapshot(lastGamePlayersRef, doc => {
+                setGame(doc.data())
+                setLoading(false)
+            })
+        }
+        getRef()
+    }, [])
+
+    return [game, loading]
+}
 
 export function useUserFromDb(id) {
     const [user, setUser] = useState()

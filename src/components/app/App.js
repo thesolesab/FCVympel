@@ -18,6 +18,7 @@ import { setNextGame } from 'store/slices/gameSlice';
 
 import DialogOnOpen from 'components/DialogOnOpen';
 import ResultsPage from 'pages/ResultsPage';
+import useSetLastGameInDB from 'hooks/useSetLastGameInDB';
 
 
 
@@ -28,6 +29,8 @@ function App() {
   const { isAuth, isAdmin } = useUserFromStore()
   const [games] = useFetchData('games/gameDays/children')
   const nextGame = games?.find(el => el.name === 'NextGame')
+
+  useSetLastGameInDB()
 
   useEffect(() => {
     if (nextGame) {
@@ -65,7 +68,7 @@ function App() {
     <>
       <HeaderApp />
       {loading && <LinearProgress color="secondary" />}
-      <DialogOnOpen />
+      {/* <DialogOnOpen /> */}
       <Container maxWidth="xl">
         <Routes>
           <Route path='/' element={<HomePage />} />
